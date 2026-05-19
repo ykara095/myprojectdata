@@ -1,173 +1,88 @@
 :root {
-    --ana-renk: #2c3e50;
-    --vurgu-rengi: #3498db;
-    --uyari-rengi: #e74c3c;
-    --acik-renk: #ecf0f1;
-    --koyu-renk: #34495e;
+    --primary: #2c3e50;
+    --secondary: #3498db;
+    --light: #ecf0f1;
 }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--light);
     margin: 0;
-    display: flex;
-    background-color: #f4f7f6;
+    padding: 20px;
+    color: #333;
 }
 
 .container {
-    display: flex;
-    width: 100%;
-}
-
-/* Yan Menu */
-.sidebar {
-    width: 250px;
-    height: 100vh;
-    background-color: var(--ana-renk);
-    color: white;
-    padding: 20px;
-    position: fixed;
-}
-
-.sidebar h2 {
-    text-align: center;
-    border-bottom: 1px solid #ffffff33;
-    padding-bottom: 10px;
-}
-
-.sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin-top: 30px;
-}
-
-.sidebar ul li a {
-    color: white;
-    text-decoration: none;
-    display: block;
-    padding: 15px;
-    transition: 0.3s;
-    border-radius: 5px;
-}
-
-.sidebar ul li a:hover,
-.sidebar ul li a.aktif {
-    background-color: var(--vurgu-rengi);
-}
-
-/* Kendi İkon Temel Sınıfımız */
-.ikon {
-    font-style: normal;
-    /* <i> etiketinin varsayılan eğikliğini kaldırır */
-    display: inline-block;
-    margin-right: 8px;
-    width: 20px;
-    text-align: center;
-    font-size: 1.1em;
-}
-
-/* İkonların İçerikleri (Unicode Semboller/Emojiler) */
-.ikon-ev::before {
-    content: "🏠";
-}
-
-.ikon-kutu::before {
-    content: "📦";
-}
-
-.ikon-depo::before {
-    content: "🏭";
-}
-
-.ikon-hareket::before {
-    content: "🔄";
-}
-
-.ikon-personel::before {
-    content: "👥";
-}
-
-.ikon-arti::before {
-    content: "➕";
-}
-
-/* İçerik Alanı */
-.content {
-    margin-left: 250px;
-    padding: 30px;
-    width: calc(100% - 250px);
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-}
-
-/* İstatistik Kartları */
-.istatistikler {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.kart {
+    max-width: 1000px;
+    margin: 0 auto;
     background: white;
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
-.kart.uyari {
-    border-top: 5px solid var(--uyari-rengi);
-}
-
-.kart h3 {
-    color: var(--koyu-renk);
-    font-size: 1rem;
-    margin-bottom: 10px;
-}
-
-.kart p {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--vurgu-rengi);
-}
-
-/* Form Stilleri */
-.form-alani {
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
+    border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.input-grubu {
+h1 {
+    color: var(--primary);
+    text-align: center;
+}
+
+.form-group {
     display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 input,
-select {
-    flex: 1;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
 }
 
-.buton-ekle {
-    background-color: var(--vurgu-rengi);
+input {
+    flex: 1;
+    min-width: 150px;
+}
+
+button {
+    background-color: var(--secondary);
     color: white;
     border: none;
-    padding: 12px 25px;
-    border-radius: 5px;
     cursor: pointer;
-    font-weight: bold;
+    transition: 0.3s;
 }
 
-.buton-ekle:hover {
+button:hover {
     background-color: #2980b9;
+}
+
+.search-bar {
+    width: 100%;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    /* Padding'in genişliği bozmasını engeller */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: var(--primary);
+    color: white;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
 }

@@ -1,0 +1,365 @@
+const BASE_URL = 'http://localhost:3000/api';
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    // --- 1. ÜRÜNLER SAYFASI ---
+    if (document.getElementById('urunEkleBtn')) {
+        const API_URL = `${BASE_URL}/urunler`;
+        verileriGetir();
+
+        document.getElementById('urunEkleBtn').addEventListener('click', async () => {
+            const veri = {
+                Urun_Adi: document.getElementById('urunAdi').value,
+                Barkod: document.getElementById('barkod').value,
+                Birim_Fiyat: document.getElementById('fiyat').value,
+                Kritik_Stok_Seviyesi: document.getElementById('kritikStok').value,
+                Kategori_ID: document.getElementById('kategoriId').value
+            };
+            if (!veri.Urun_Adi || !veri.Barkod) return alert("Ürün Adı ve Barkod zorunludur.");
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(veri)
+                });
+                if (!res.ok) {
+                    const hata = await res.json();
+                    alert("EKLEME HATASI:\n" + (hata.hata || hata.mesaj));
+                    return;
+                }
+                verileriGetir();
+            } catch (err) { alert("Sunucuya bağlanılamadı."); }
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            setTimeout(() => { verileriGetir(e.target.value); }, 300);
+        });
+
+        async function verileriGetir(search = '') {
+            try {
+                const res = await fetch(search ? `${API_URL}?search=${search}` : API_URL);
+                const veriler = await res.json();
+                const tbody = document.getElementById('tabloGövdesi');
+                tbody.innerHTML = '';
+                veriler.forEach(v => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${v.Urun_ID}</td>
+                            <td>${v.Urun_Adi}</td>
+                            <td>${v.Barkod}</td>
+                            <td>${v.Birim_Fiyat}</td>
+                            <td>${v.Kritik_Stok_Seviyesi}</td>
+                            <td><button style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;" onclick="kayitSil('${API_URL}', ${v.Urun_ID}, window.verileriGetir)">Sil</button></td>
+                        </tr>
+                    `;
+                });
+            } catch (e) { console.error(e); }
+        }
+        window.verileriGetir = verileriGetir;
+    }
+
+    // --- 2. KATEGORİLER SAYFASI ---
+    else if (document.getElementById('kategoriEkleBtn')) {
+        const API_URL = `${BASE_URL}/kategoriler`;
+        verileriGetir();
+
+        document.getElementById('kategoriEkleBtn').addEventListener('click', async () => {
+            const veri = {
+                Kategori_Adi: document.getElementById('kategoriAdi').value,
+                Tanim: document.getElementById('tanim').value
+            };
+            if (!veri.Kategori_Adi) return alert("Kategori Adı zorunludur.");
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(veri)
+                });
+                if (!res.ok) {
+                    const hata = await res.json();
+                    alert("EKLEME HATASI:\n" + (hata.hata || hata.mesaj));
+                    return;
+                }
+                verileriGetir();
+            } catch (err) { alert("Sunucuya bağlanılamadı."); }
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            setTimeout(() => { verileriGetir(e.target.value); }, 300);
+        });
+
+        async function verileriGetir(search = '') {
+            try {
+                const res = await fetch(search ? `${API_URL}?search=${search}` : API_URL);
+                const veriler = await res.json();
+                const tbody = document.getElementById('tabloGövdesi');
+                tbody.innerHTML = '';
+                veriler.forEach(v => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${v.Kategori_ID}</td>
+                            <td>${v.Kategori_Adi}</td>
+                            <td>${v.Tanim}</td>
+                            <td><button style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;" onclick="kayitSil('${API_URL}', ${v.Kategori_ID}, window.verileriGetir)">Sil</button></td>
+                        </tr>
+                    `;
+                });
+            } catch (e) { console.error(e); }
+        }
+        window.verileriGetir = verileriGetir;
+    }
+
+    // --- 3. DEPOLAR SAYFASI ---
+    else if (document.getElementById('depoEkleBtn')) {
+        const API_URL = `${BASE_URL}/depolar`;
+        verileriGetir();
+
+        document.getElementById('depoEkleBtn').addEventListener('click', async () => {
+            const veri = {
+                Depo_Adi: document.getElementById('depoAdi').value,
+                Lokasyon_Adres: document.getElementById('lokasyonAdres').value,
+                Toplam_Kapasite: document.getElementById('toplamKapasite').value
+            };
+            if (!veri.Depo_Adi) return alert("Depo Adı zorunludur.");
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(veri)
+                });
+                if (!res.ok) {
+                    const hata = await res.json();
+                    alert("EKLEME HATASI:\n" + (hata.hata || hata.mesaj));
+                    return;
+                }
+                verileriGetir();
+            } catch (err) { alert("Sunucuya bağlanılamadı."); }
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            setTimeout(() => { verileriGetir(e.target.value); }, 300);
+        });
+
+        async function verileriGetir(search = '') {
+            try {
+                const res = await fetch(search ? `${API_URL}?search=${search}` : API_URL);
+                const veriler = await res.json();
+                const tbody = document.getElementById('tabloGövdesi');
+                tbody.innerHTML = '';
+                veriler.forEach(v => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${v.Depo_ID}</td>
+                            <td>${v.Depo_Adi}</td>
+                            <td>${v.Lokasyon_Adres}</td>
+                            <td>${v.Toplam_Kapasite}</td>
+                            <td><button style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;" onclick="kayitSil('${API_URL}', ${v.Depo_ID}, window.verileriGetir)">Sil</button></td>
+                        </tr>
+                    `;
+                });
+            } catch (e) { console.error(e); }
+        }
+        window.verileriGetir = verileriGetir;
+    }
+
+    // --- 4. PERSONEL SAYFASI ---
+    else if (document.getElementById('personelEkleBtn')) {
+        const API_URL = `${BASE_URL}/personel`;
+        verileriGetir();
+
+        document.getElementById('personelEkleBtn').addEventListener('click', async () => {
+            const veri = {
+                Ad: document.getElementById('ad').value,
+                Soyad: document.getElementById('soyad').value,
+                Gorev: document.getElementById('gorev').value,
+                Erisim_Yetkisi: document.getElementById('erisimYetkisi').value,
+                Depo_ID: document.getElementById('depoId').value
+            };
+            if (!veri.Ad || !veri.Soyad) return alert("Ad ve Soyad zorunludur.");
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(veri)
+                });
+                if (!res.ok) {
+                    const hata = await res.json();
+                    alert("EKLEME HATASI:\n" + (hata.hata || hata.mesaj));
+                    return;
+                }
+                verileriGetir();
+            } catch (err) { alert("Sunucuya bağlanılamadı."); }
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            setTimeout(() => { verileriGetir(e.target.value); }, 300);
+        });
+
+        async function verileriGetir(search = '') {
+            try {
+                const res = await fetch(search ? `${API_URL}?search=${search}` : API_URL);
+                const veriler = await res.json();
+                const tbody = document.getElementById('tabloGövdesi');
+                tbody.innerHTML = '';
+                veriler.forEach(v => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${v.Personel_ID}</td>
+                            <td>${v.Ad}</td>
+                            <td>${v.Soyad}</td>
+                            <td>${v.Gorev}</td>
+                            <td>${v.Erisim_Yetkisi}</td>
+                            <td>${v.Depo_ID}</td>
+                            <td><button style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;" onclick="kayitSil('${API_URL}', ${v.Personel_ID}, window.verileriGetir)">Sil</button></td>
+                        </tr>
+                    `;
+                });
+            } catch (e) { console.error(e); }
+        }
+        window.verileriGetir = verileriGetir;
+    }
+
+    // --- 5. TEDARİKÇİLER SAYFASI ---
+    else if (document.getElementById('tedarikciEkleBtn')) {
+        const API_URL = `${BASE_URL}/tedarikciler`;
+        verileriGetir();
+
+        document.getElementById('tedarikciEkleBtn').addEventListener('click', async () => {
+            const veri = {
+                Firma_Adi: document.getElementById('firmaAdi').value,
+                Iletisim_Bilgileri: document.getElementById('iletisimBilgileri').value
+            };
+            if (!veri.Firma_Adi) return alert("Firma Adı zorunludur.");
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(veri)
+                });
+                if (!res.ok) {
+                    const hata = await res.json();
+                    alert("EKLEME HATASI:\n" + (hata.hata || hata.mesaj));
+                    return;
+                }
+                verileriGetir();
+            } catch (err) { alert("Sunucuya bağlanılamadı."); }
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            setTimeout(() => { verileriGetir(e.target.value); }, 300);
+        });
+
+        async function verileriGetir(search = '') {
+            try {
+                const res = await fetch(search ? `${API_URL}?search=${search}` : API_URL);
+                const veriler = await res.json();
+                const tbody = document.getElementById('tabloGövdesi');
+                tbody.innerHTML = '';
+                veriler.forEach(v => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${v.Tedarikci_ID}</td>
+                            <td>${v.Firma_Adi}</td>
+                            <td>${v.Iletisim_Bilgileri}</td>
+                            <td><button style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;" onclick="kayitSil('${API_URL}', ${v.Tedarikci_ID}, window.verileriGetir)">Sil</button></td>
+                        </tr>
+                    `;
+                });
+            } catch (e) { console.error(e); }
+        }
+        window.verileriGetir = verileriGetir;
+    }
+
+    // --- 6. STOK HAREKETLERİ SAYFASI ---
+    else if (document.getElementById('hareketEkleBtn')) {
+        const API_URL = `${BASE_URL}/stokhareketleri`;
+        verileriGetir();
+
+        document.getElementById('hareketEkleBtn').addEventListener('click', async () => {
+            const veri = {
+                Islem_Tipi: document.getElementById('islemTipi').value,
+                Miktar: document.getElementById('miktar').value,
+                Urun_ID: document.getElementById('urunId').value,
+                Depo_ID: document.getElementById('depoId').value,
+                Personel_ID: document.getElementById('personelId').value
+            };
+            if (!veri.Islem_Tipi || !veri.Miktar) return alert("İşlem tipi ve Miktar zorunludur.");
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(veri)
+                });
+                if (!res.ok) {
+                    const hata = await res.json();
+                    alert("EKLEME HATASI:\n" + (hata.hata || hata.mesaj));
+                    return;
+                }
+                verileriGetir();
+            } catch (err) { alert("Sunucuya bağlanılamadı."); }
+        });
+
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            setTimeout(() => { verileriGetir(e.target.value); }, 300);
+        });
+
+        async function verileriGetir(search = '') {
+            try {
+                const res = await fetch(search ? `${API_URL}?search=${search}` : API_URL);
+                const veriler = await res.json();
+                const tbody = document.getElementById('tabloGövdesi');
+                tbody.innerHTML = '';
+                veriler.forEach(v => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${v.Hareket_ID}</td>
+                            <td>${v.Islem_Tipi}</td>
+                            <td>${v.Miktar}</td>
+                            <td>${v.Islem_Tarihi}</td>
+                            <td>${v.Urun_ID}</td>
+                            <td>${v.Depo_ID}</td>
+                            <td>${v.Personel_ID}</td>
+                            <td><button style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px;" onclick="kayitSil('${API_URL}', ${v.Hareket_ID}, window.verileriGetir)">Sil</button></td>
+                        </tr>
+                    `;
+                });
+            } catch (e) { console.error(e); }
+        }
+        window.verileriGetir = verileriGetir;
+    }
+
+});
+
+// --- ORTAK SİLME FONKSİYONU ---
+async function kayitSil(apiUrl, id, tabloGuncelleCallback) {
+    if (!confirm("Bu kaydı silmek istediğinize emin misiniz?")) {
+        return;
+    }
+
+    try {
+        const response = await fetch(`${apiUrl}/${id}`, {
+            method: 'DELETE'
+        });
+
+        // Backend'den hata geldiyse (Örn: Foreign Key Hatası)
+        if (!response.ok) {
+            const data = await response.json();
+            // Kullanıcıya hatayı alert ile fırlat
+            alert("SİLME HATASI:\nİşlem başarısız oldu!\n\nDetay: " + (data.hata || data.mesaj));
+            return;
+        }
+
+        // Başarılıysa tabloyu yeniden çiz
+        tabloGuncelleCallback();
+
+    } catch (error) {
+        console.error('Silme işlemi hatası:', error);
+        alert("Bağlantı hatası oluştu.");
+    }
+}

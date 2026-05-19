@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akıllı Stok Yönetimi - Ürünler</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Menü için ek şık tasarım (style.css ile tam uyumlu) */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar a {
+            color: #2c3e50;
+            /* var(--primary) rengi */
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #ecf0f1;
+            /* var(--light) rengi */
+            color: #3498db;
+            /* var(--secondary) rengi */
+        }
+
+        .navbar a.active {
+            background-color: #3498db;
+            /* Aktif sayfa vurgusu */
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar-wrapper" style="max-width: 1000px; margin: 0 auto;">
+        <div class="navbar">
+            <a href="main.html" class="active">Ürünler</a>
+            <a href="kategori.html">Kategoriler</a>
+            <a href="depo.html">Depolar</a>
+            <a href="personel.html">Personel</a>
+            <a href="tedarik.html">Tedarikçiler</a>
+            <a href="stok.html">Stok Hareketleri</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Ürün Yönetim Paneli</h1>
+
+        <div class="form-group">
+            <input type="text" id="urunAdi" placeholder="Ürün Adı">
+            <input type="text" id="barkod" placeholder="Barkod">
+            <input type="number" step="0.01" id="fiyat" placeholder="Birim Fiyatı (TL)">
+            <input type="number" id="kritikStok" placeholder="Kritik Stok Seviyesi">
+            <input type="number" id="kategoriId" placeholder="Kategori ID">
+            <button id="urunEkleBtn">Ürün Ekle</button>
+        </div>
+
+        <input type="text" id="searchInput" class="search-bar" placeholder="Ürün adı veya barkod ile ara...">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Ürün ID</th>
+                    <th>Ürün Adı</th>
+                    <th>Barkod</th>
+                    <th>Birim Fiyat</th>
+                    <th>Kritik Stok</th>
+                    <th>İşlemler</th>
+                </tr>
+            </thead>
+            <tbody id="tabloGövdesi">
+            </tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
