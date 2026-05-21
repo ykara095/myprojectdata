@@ -23,15 +23,32 @@ def get_urunler():
         cursor = conn.cursor(dictionary=True)
         
         search_query = request.args.get('search', '')
+        min_fiyat = request.args.get('minFiyat', type=float)
+        max_fiyat = request.args.get('maxFiyat', type=float)
+        sort_by = request.args.get('sort_by', '')
+        order = request.args.get('order', 'DESC').upper()
+        
+        query = "SELECT * FROM Urunler WHERE 1=1"
+        params = []
         
         if search_query:
-            # SQL tabanlı arama (Ürün Adı veya Barkod içinde arama yapar)
-            query = "SELECT * FROM Urunler WHERE Urun_Adi LIKE %s OR Barkod LIKE %s"
+            query += " AND (Urun_Adi LIKE %s OR Barkod LIKE %s)"
             like_val = f"%{search_query}%"
-            cursor.execute(query, (like_val, like_val))
-        else:
-            cursor.execute("SELECT * FROM Urunler")
+            params.extend([like_val, like_val])
             
+        if min_fiyat is not None:
+            query += " AND Birim_Fiyat >= %s"
+            params.append(min_fiyat)
+        if max_fiyat is not None:
+            query += " AND Birim_Fiyat <= %s"
+            params.append(max_fiyat)
+            
+        allowed_sort = {'Birim_Fiyat', 'Kategori_ID', 'Urun_ID'}
+        if sort_by in allowed_sort:
+            if order not in ['ASC', 'DESC']: order = 'DESC'
+            query += f" ORDER BY {sort_by} {order}"
+            
+        cursor.execute(query, tuple(params))
         urunler = cursor.fetchall()
         
         return jsonify(urunler), 200
@@ -113,10 +130,22 @@ def get_kategoriler():
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor(dictionary=True)
         search = request.args.get('search', '')
+        sort_by = request.args.get('sort_by', '')
+        order = request.args.get('order', 'DESC').upper()
+
+        query = "SELECT * FROM Kategoriler WHERE 1=1"
+        params = []
+
         if search:
-            cursor.execute("SELECT * FROM Kategoriler WHERE Kategori_Adi LIKE %s", (f"%{search}%",))
-        else:
-            cursor.execute("SELECT * FROM Kategoriler")
+            query += " AND Kategori_Adi LIKE %s"
+            params.append(f"%{search}%")
+
+        allowed_sort = {'Kategori_ID'}
+        if sort_by in allowed_sort:
+            if order not in ['ASC', 'DESC']: order = 'DESC'
+            query += f" ORDER BY {sort_by} {order}"
+
+        cursor.execute(query, tuple(params))
         return jsonify(cursor.fetchall()), 200
     except Exception as e: return jsonify({"hata": str(e)}), 500
     finally:
@@ -155,10 +184,22 @@ def get_depolar():
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor(dictionary=True)
         search = request.args.get('search', '')
+        sort_by = request.args.get('sort_by', '')
+        order = request.args.get('order', 'DESC').upper()
+
+        query = "SELECT * FROM Depolar WHERE 1=1"
+        params = []
+
         if search:
-            cursor.execute("SELECT * FROM Depolar WHERE Depo_Adi LIKE %s", (f"%{search}%",))
-        else:
-            cursor.execute("SELECT * FROM Depolar")
+            query += " AND Depo_Adi LIKE %s"
+            params.append(f"%{search}%")
+
+        allowed_sort = {'Toplam_Kapasite', 'Depo_ID'}
+        if sort_by in allowed_sort:
+            if order not in ['ASC', 'DESC']: order = 'DESC'
+            query += f" ORDER BY {sort_by} {order}"
+
+        cursor.execute(query, tuple(params))
         return jsonify(cursor.fetchall()), 200
     except Exception as e: return jsonify({"hata": str(e)}), 500
     finally:
@@ -197,10 +238,26 @@ def get_personel():
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor(dictionary=True)
         search = request.args.get('search', '')
+        depo_id = request.args.get('depoId', type=int)
+        sort_by = request.args.get('sort_by', '')
+        order = request.args.get('order', 'DESC').upper()
+
+        query = "SELECT * FROM Personel WHERE 1=1"
+        params = []
+
         if search:
-            cursor.execute("SELECT * FROM Personel WHERE Ad LIKE %s OR Soyad LIKE %s", (f"%{search}%", f"%{search}%"))
-        else:
-            cursor.execute("SELECT * FROM Personel")
+            query += " AND (Ad LIKE %s OR Soyad LIKE %s)"
+            params.extend([f"%{search}%", f"%{search}%"])
+        if depo_id is not None:
+            query += " AND Depo_ID = %s"
+            params.append(depo_id)
+
+        allowed_sort = {'Personel_ID'}
+        if sort_by in allowed_sort:
+            if order not in ['ASC', 'DESC']: order = 'DESC'
+            query += f" ORDER BY {sort_by} {order}"
+
+        cursor.execute(query, tuple(params))
         return jsonify(cursor.fetchall()), 200
     except Exception as e: return jsonify({"hata": str(e)}), 500
     finally:
@@ -239,10 +296,22 @@ def get_tedarikciler():
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor(dictionary=True)
         search = request.args.get('search', '')
+        sort_by = request.args.get('sort_by', '')
+        order = request.args.get('order', 'DESC').upper()
+
+        query = "SELECT * FROM Tedarikciler WHERE 1=1"
+        params = []
+
         if search:
-            cursor.execute("SELECT * FROM Tedarikciler WHERE Firma_Adi LIKE %s", (f"%{search}%",))
-        else:
-            cursor.execute("SELECT * FROM Tedarikciler")
+            query += " AND Firma_Adi LIKE %s"
+            params.append(f"%{search}%")
+
+        allowed_sort = {'Tedarikci_ID'}
+        if sort_by in allowed_sort:
+            if order not in ['ASC', 'DESC']: order = 'DESC'
+            query += f" ORDER BY {sort_by} {order}"
+
+        cursor.execute(query, tuple(params))
         return jsonify(cursor.fetchall()), 200
     except Exception as e: return jsonify({"hata": str(e)}), 500
     finally:
@@ -281,10 +350,22 @@ def get_stokhareketleri():
         conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor(dictionary=True)
         search = request.args.get('search', '')
+        sort_by = request.args.get('sort_by', '')
+        order = request.args.get('order', 'DESC').upper()
+
+        query = "SELECT * FROM Stok_Hareketleri WHERE 1=1"
+        params = []
+
         if search:
-            cursor.execute("SELECT * FROM Stok_Hareketleri WHERE Islem_Tipi LIKE %s", (f"%{search}%",))
-        else:
-            cursor.execute("SELECT * FROM Stok_Hareketleri")
+            query += " AND Islem_Tipi LIKE %s"
+            params.append(f"%{search}%")
+
+        allowed_sort = {'Hareket_ID', 'Islem_Tarihi'}
+        if sort_by in allowed_sort:
+            if order not in ['ASC', 'DESC']: order = 'DESC'
+            query += f" ORDER BY {sort_by} {order}"
+
+        cursor.execute(query, tuple(params))
         return jsonify(cursor.fetchall()), 200
     except Exception as e: return jsonify({"hata": str(e)}), 500
     finally:
@@ -316,6 +397,8 @@ def delete_stokhareketi(id):
         if 'conn' in locals() and conn.is_connected(): cursor.close(); conn.close()
 
 
+
+
 if __name__ == '__main__':
     # JavaScript kodunda değişiklik yapmamak için portu yine 3000 olarak ayarlıyoruz
-    app.run(port=3000, debug=True)
+    app.run(port=3000, debug=True)

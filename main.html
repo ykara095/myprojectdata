@@ -69,16 +69,20 @@
             <button id="urunEkleBtn">Ürün Ekle</button>
         </div>
 
-        <input type="text" id="searchInput" class="search-bar" placeholder="Ürün adı veya barkod ile ara...">
-
+        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Ürün adı veya barkod ile ara..." style="flex: 2; margin-bottom: 0;">
+            <input type="number" id="minFiyat" class="search-bar" placeholder="En Az Fiyat" style="flex: 1; margin-bottom: 0;">
+            <input type="number" id="maxFiyat" class="search-bar" placeholder="En Çok Fiyat" style="flex: 1; margin-bottom: 0;">
+        </div>
         <table>
             <thead>
                 <tr>
-                    <th>Ürün ID</th>
+                    <th style="cursor: pointer;" onclick="siralamaYap('Urun_ID')">Ürün ID ↕</th>
                     <th>Ürün Adı</th>
                     <th>Barkod</th>
-                    <th>Birim Fiyat</th>
+                    <th style="cursor: pointer;" onclick="siralamaYap('Birim_Fiyat')">Birim Fiyat ↕</th>
                     <th>Kritik Stok</th>
+                    <th style="cursor: pointer;" onclick="siralamaYap('Kategori_ID')">Kategori ID ↕</th>
                     <th>İşlemler</th>
                 </tr>
             </thead>

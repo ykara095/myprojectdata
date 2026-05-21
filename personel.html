@@ -68,12 +68,14 @@
             <button id="personelEkleBtn">Personel Kaydet</button>
         </div>
 
-        <input type="text" id="searchInput" class="search-bar" placeholder="Personel ara...">
-
+        <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Personel ara..." style="flex: 2; margin-bottom: 0;">
+            <input type="number" id="searchDepoId" class="search-bar" placeholder="Çalıştığı Depo ID ile ara..." style="flex: 1; margin-bottom: 0;">
+        </div>
         <table>
             <thead>
                 <tr>
-                    <th>Personel ID</th>
+                    <th style="cursor: pointer;" onclick="siralamaYap('Personel_ID')">Personel ID ↕</th>
                     <th>Ad</th>
                     <th>Soyad</th>
                     <th>Görev</th>
