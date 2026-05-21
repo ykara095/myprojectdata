@@ -1,45 +1,53 @@
-# Gelişmiş Sorgular ve Filtrelemeler (Raporlar) Uygulama Planı
+# Hedef: SQL Sorgularını Veritabanına (Stored Procedure) Taşımak
 
-Bu plan, istenilen 14 gelişmiş sorgu ve rapor modülünün projeye entegre edilmesini amaçlamaktadır. Projenizin mevcut yapısını koruyarak, yeni bir Raporlar API uç noktası kümesi ve dinamik bir arayüz tasarlanacaktır.
+Kullanıcının isteği doğrultusunda `backend.py` dosyasında bulunan tüm ham SQL (raw SQL) sorgularını veritabanına taşıyacağız. Veritabanında **Stored Procedure (Saklı Yordam)** yapıları oluşturulacak ve `backend.py` sadece bu prosedürleri çağırarak (bridge görevi görerek) çalışacak.
 
 ## User Review Required
 
-> [!IMPORTANT]  
-> Lütfen aşağıdaki planı inceleyin. Planda, arayüzde (sorgular.html) dinamik bir tablo yapısı kuracağım belirtilmektedir. Yani dönen JSON verisinin anahtarlarına göre tablo başlıkları otomatik oluşacaktır. Bu, 14 farklı tablo için ayrı ayrı HTML yazılmasını engeller ve daha temiz bir kod sunar. Bu yaklaşımı onaylıyor musunuz?
+> [!IMPORTANT]
+> **Dinamik Sorgular (Arama ve Sıralama):** `GET` isteklerinde kullanılan dinamik arama (search) ve sıralama (sort_by, order) işlemleri için Stored Procedure'ler içerisinde `PREPARE STATEMENT` yapısı kullanılacaktır. Bu durum, prosedürlerin biraz daha karmaşık görünmesine sebep olsa da tüm iş yükünü MySQL tarafına aktarmamızı sağlayacaktır.
+> **Güvenlik:** Dinamik sıralamada SQL Injection riskini engellemek için prosedür içerisinde izin verilen sütun adları beyaz liste (whitelist) veya mantıksal kontrollerle denetlenecektir.
 
 ## Proposed Changes
 
-### 1. Python Backend (`backend.py`)
-Mevcut kodun sonuna `--- RAPORLAR VE GELİŞMİŞ SORGULAR ---` adlı yeni bir bölüm eklenecek ve 14 sorguyu karşılayan API rotaları yazılacaktır:
-- **GET /api/raporlar/urun-filtre**: Min/Max fiyat ve Kritik Stok filtreleri (Madde 1 ve 2).
-- **GET /api/raporlar/depo-filtre**: Lokasyon (İl) bazlı depo filtreleme (Madde 3).
-- **GET /api/raporlar/hareket-filtre**: İşlem tipi, miktar aralığı ve tarih aralığına göre stok hareketi filtreleme (Madde 4, 5 ve 6).
-- **GET /api/raporlar/depo-doluluk**: Toplam kapasite vs mevcut stok doluluk oranı hesabı (`GROUP BY`, `LEFT JOIN`) (Madde 7).
-- **GET /api/raporlar/envanter-degeri**: Depodaki mevcut stok * fiyat (Madde 8).
-- **GET /api/raporlar/trend-urunler**: En çok işlem gören 10 ürün (Madde 9).
-- **GET /api/raporlar/personel-performans**: Personelin yaptığı toplam işlem ve hacimler (Madde 10).
-- **GET /api/raporlar/tedarikci-urun**: Tedarikçi - Ürün eşleştirmesi (Madde 11).
-- **GET /api/raporlar/kategori-detayli-urun**: Kategori adıyla birleştirilmiş ürün listesi (`INNER JOIN`) (Madde 12).
-- **GET /api/raporlar/kritik-stok-uyarisi**: Stok miktarı kritik seviyenin altında kalan ürünler (Madde 13).
-- **GET /api/raporlar/detayli-stok-hareketleri**: ID'ler yerine insan okumasına uygun, JOIN ile birleştirilmiş loglar (Madde 14).
+---
 
-> Not: Tüm SQL sorgularında `%s` kullanılarak SQL Injection koruması sağlanacaktır.
+### Veritabanı Değişiklikleri (`proje.sql` ve Canlı Veritabanı)
 
-### 2. Frontend (`sorgular.html`)
-- Mevcut `sorgular.html`'deki dropdown (`<select id="raporTipi">`) içerisine 4'ten 14'e kadar olan rapor türleri için yeni `option` etiketleri eklenecektir.
-- Filtre parametresi gerektirmeyen (örneğin "Depo Doluluk Oranı" veya "Trend Ürünler") raporlar seçildiğinde, filtre panelleri gizlenecek ve sadece "Sorguyu Çalıştır" butonu aktif olacaktır.
-- Arayüz, tek bir tablo iskeletine sahip olacak ve sonuçlar dinamik olarak bu tabloya çizilecektir.
+Aşağıdaki özellikler için `proje.sql` dosyasına Stored Procedure'ler eklenecek ve veritabanına uygulanacaktır:
 
-### 3. JavaScript (`script.js`)
-`sorgular.html`'in çalışması için yeni bir mantık bloğu eklenecektir:
-- **Olay Dinleyicileri (Event Listeners)**: Dropdown değiştiğinde ilgili filtre panelinin (`panel-urun`, `panel-depo`, `panel-hareket` veya `panel-yok`) gösterilip gizlenmesi sağlanacak.
-- **Fetch API Entegrasyonu**: Filtrelerdeki veriler (min, max, il, tarih vb.) toplanarak `URLSearchParams` yardımıyla `backend.py`'a iletilecek.
-- **Dinamik Tablo Oluşturucu (`renderRaporTablosu`)**: Gelen JSON verisindeki `Object.keys()` kullanılarak tablo başlıkları otomatik olarak oluşturulacak ve değerler satırlara yazdırılacaktır. Böylece kod tekrarı engellenecektir.
+#### [MODIFY] [proje.sql](file:///d:/projects/Proje/proje.sql)
+- **Ürünler:** `GetUrunler`, `AddUrun`, `DeleteUrun`
+- **Kategoriler:** `GetKategoriler`, `AddKategori`, `DeleteKategori`
+- **Depolar:** `GetDepolar`, `AddDepo`, `DeleteDepo`
+- **Personel:** `GetPersonel`, `AddPersonel`, `DeletePersonel`
+- **Tedarikçiler:** `GetTedarikciler`, `AddTedarikci`, `DeleteTedarikci`
+- **Stok Hareketleri:** `GetStokHareketleri`, `AddStokHareketi`, `DeleteStokHareketi`
 
-### 4. Navigasyon Güncellemeleri
-Diğer sayfalardaki (`main.html`, `kategori.html`, `depo.html`, `personel.html`, `tedarik.html`, `stok.html`) navbar menülerine "Sorgular" linki eklenecektir.
+*Not: Ekleme prosedürleri eklenen kimliği (Last Insert ID) veya silme prosedürleri silinen satır sayısını OUT parametresi veya Select ile dönecektir.*
+
+---
+
+### Backend Değişiklikleri (`backend.py`)
+
+#### [MODIFY] [backend.py](file:///d:/projects/Proje/backend.py)
+Tüm rotalardaki (`/api/...`) string formatındaki SQL sorguları tamamen kaldırılacak. Bunun yerine `cursor.callproc('ProsedurAdi', [parametreler])` yapısı kullanılacaktır. Veya basit argüman geçişleri için `CALL ProsedurAdi(...)` kullanılacaktır.
+
+Örnek dönüşüm:
+```python
+# ESKİ:
+query = "INSERT INTO Urunler (Urun_Adi, Barkod, ...) VALUES (%s, %s, ...)"
+cursor.execute(query, values)
+
+# YENİ:
+cursor.callproc('AddUrun', [Urun_Adi, Barkod, ...])
+```
 
 ## Verification Plan
-1. Backend çalıştırılarak yeni yazılan uç noktaların veritabanından doğru JOIN ve GROUP BY verilerini getirip getirmediği test edilecektir.
-2. `sorgular.html` üzerinden her bir rapor tipi sırayla seçilip sonuçların tabloda eksiksiz gösterildiği doğrulanacaktır.
-3. Parametreli filtrelerde (örneğin fiyat aralığı) sınır değerleri denenerek veri akışının bütünlüğü teyit edilecektir.
+
+### Automated Tests
+1. Python üzerinden özel bir çalıştırıcı komut yazılarak oluşturulan prosedürlerin hatasız şekilde veritabanına eklenip eklenmediği kontrol edilecek.
+
+### Manual Verification
+2. `baslat.bat` aracılığıyla backend sunucusu tekrar başlatılacak.
+3. Ön yüz (frontend) üzerinden arama, ekleme ve silme işlemleri test edilecek, `backend.py`'nin sadece prosedür çağırarak sorunsuz çalışıp çalışmadığı gözlemlenecek.
