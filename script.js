@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } catch (err) { alert("Sunucuya bağlanılamadı."); }
         });
 
-        const inputs = ['searchInput', 'minFiyat', 'maxFiyat'];
+        const inputs = ['searchInput', 'minFiyat', 'maxFiyat', 'searchKategoriId'];
         inputs.forEach(id => {
             const el = document.getElementById(id);
             if(el) {
@@ -72,11 +72,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 const search = document.getElementById('searchInput') ? document.getElementById('searchInput').value : '';
                 const minFiyat = document.getElementById('minFiyat') ? document.getElementById('minFiyat').value : '';
                 const maxFiyat = document.getElementById('maxFiyat') ? document.getElementById('maxFiyat').value : '';
+                const searchKategoriId = document.getElementById('searchKategoriId') ? document.getElementById('searchKategoriId').value : '';
 
                 const p = new URLSearchParams();
                 if (search) p.append('search', search);
                 if (minFiyat) p.append('minFiyat', minFiyat);
                 if (maxFiyat) p.append('maxFiyat', maxFiyat);
+                if (searchKategoriId) p.append('kategoriId', searchKategoriId);
                 if (currentSortColumn) {
                     p.append('sort_by', currentSortColumn);
                     p.append('order', currentSortOrder);
@@ -220,15 +222,23 @@ document.addEventListener("DOMContentLoaded", () => {
             } catch (err) { alert("Sunucuya bağlanılamadı."); }
         });
 
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            setTimeout(() => { verileriGetir(); }, 300);
+        const inputs = ['searchInput', 'searchLokasyon'];
+        inputs.forEach(id => {
+            const el = document.getElementById(id);
+            if(el) {
+                el.addEventListener('input', () => {
+                    setTimeout(() => { verileriGetir(); }, 300);
+                });
+            }
         });
 
         async function verileriGetir() {
             try {
                 const search = document.getElementById('searchInput') ? document.getElementById('searchInput').value : '';
+                const searchLokasyon = document.getElementById('searchLokasyon') ? document.getElementById('searchLokasyon').value : '';
                 const p = new URLSearchParams();
                 if (search) p.append('search', search);
+                if (searchLokasyon) p.append('lokasyon', searchLokasyon);
                 if (currentSortColumn) {
                     p.append('sort_by', currentSortColumn);
                     p.append('order', currentSortOrder);

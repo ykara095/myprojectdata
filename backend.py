@@ -34,10 +34,11 @@ def get_urunler():
         search_query = request.args.get('search', None)
         min_fiyat = request.args.get('minFiyat', type=float, default=None)
         max_fiyat = request.args.get('maxFiyat', type=float, default=None)
+        kategori_id = request.args.get('kategoriId', type=int, default=None)
         sort_by = request.args.get('sort_by', 'Urun_ID')
         order = request.args.get('order', 'DESC').upper()
         
-        cursor.callproc('GetUrunler', [search_query, min_fiyat, max_fiyat, sort_by, order])
+        cursor.callproc('GetUrunler', [search_query, min_fiyat, max_fiyat, kategori_id, sort_by, order])
         urunler = fetch_procedure_result(cursor)
         return jsonify(urunler), 200
     except Exception as e:
@@ -140,10 +141,11 @@ def get_depolar():
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
         search = request.args.get('search', None)
+        lokasyon = request.args.get('lokasyon', None)
         sort_by = request.args.get('sort_by', 'Depo_ID')
         order = request.args.get('order', 'DESC').upper()
 
-        cursor.callproc('GetDepolar', [search, sort_by, order])
+        cursor.callproc('GetDepolar', [search, lokasyon, sort_by, order])
         return jsonify(fetch_procedure_result(cursor)), 200
     except Exception as e: return jsonify({"hata": str(e)}), 500
     finally:
