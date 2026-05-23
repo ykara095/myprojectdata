@@ -2,7 +2,6 @@ const BASE_URL = 'http://localhost:3000/api';
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    // --- 1. ÜRÜNLER SAYFASI ---
     if (document.getElementById('urunEkleBtn')) {
         const API_URL = `${BASE_URL}/urunler`;
         let currentSortColumn = '';
@@ -46,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
                 
-                // Formu temizle
                 document.getElementById('urunAdi').value = '';
                 document.getElementById('barkod').value = '';
                 document.getElementById('fiyat').value = '';
@@ -107,7 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
         window.verileriGetir = verileriGetir;
     }
 
-    // --- 2. KATEGORİLER SAYFASI ---
     else if (document.getElementById('kategoriEkleBtn')) {
         const API_URL = `${BASE_URL}/kategoriler`;
         let currentSortColumn = '';
@@ -181,7 +178,6 @@ document.addEventListener("DOMContentLoaded", () => {
         window.verileriGetir = verileriGetir;
     }
 
-    // --- 3. DEPOLAR SAYFASI ---
     else if (document.getElementById('depoEkleBtn')) {
         const API_URL = `${BASE_URL}/depolar`;
         let currentSortColumn = '';
@@ -265,7 +261,6 @@ document.addEventListener("DOMContentLoaded", () => {
         window.verileriGetir = verileriGetir;
     }
 
-    // --- 4. PERSONEL SAYFASI ---
     else if (document.getElementById('personelEkleBtn')) {
         const API_URL = `${BASE_URL}/personel`;
         let currentSortColumn = '';
@@ -353,7 +348,6 @@ document.addEventListener("DOMContentLoaded", () => {
         window.verileriGetir = verileriGetir;
     }
 
-    // --- 5. TEDARİKÇİLER SAYFASI ---
     else if (document.getElementById('tedarikciEkleBtn')) {
         const API_URL = `${BASE_URL}/tedarikciler`;
         let currentSortColumn = '';
@@ -427,7 +421,6 @@ document.addEventListener("DOMContentLoaded", () => {
         window.verileriGetir = verileriGetir;
     }
 
-    // --- 6. STOK HAREKETLERİ SAYFASI ---
     else if (document.getElementById('hareketEkleBtn')) {
         const API_URL = `${BASE_URL}/stokhareketleri`;
         let currentSortColumn = '';
@@ -510,7 +503,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-// --- ORTAK SİLME FONKSİYONU ---
 async function kayitSil(apiUrl, id, tabloGuncelleCallback) {
     if (!confirm("Bu kaydı silmek istediğinize emin misiniz?")) {
         return;

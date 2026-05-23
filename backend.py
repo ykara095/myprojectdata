@@ -3,14 +3,13 @@ from flask_cors import CORS
 import mysql.connector
 
 app = Flask(__name__)
-# HTML arayüzümüzün bu sunucuya takılmadan istek atabilmesi için CORS ekliyoruz
 CORS(app) 
 
-# MySQL Veritabanı Bağlantı Ayarları
+
 db_config = {
     'host': 'localhost',
-    'user': 'root',          # MySQL kullanıcı adın
-    'password': 'muyumuyu88',  # MySQL şifren
+    'user': 'root',
+    'password': 'muyumuyu88',
     'database': 'AkilliStokDB'
 }
 
@@ -18,13 +17,11 @@ def get_db_connection():
     return mysql.connector.connect(**db_config)
 
 def fetch_procedure_result(cursor):
-    """ Saklı yordamdan (Stored Procedure) dönen veri setini alır """
     results = []
     for result in cursor.stored_results():
         results.extend(result.fetchall())
     return results
 
-# 1. Ürünleri Listeleme (GET İsteği)
 @app.route('/api/urunler', methods=['GET'])
 def get_urunler():
     try:
@@ -47,8 +44,6 @@ def get_urunler():
         if 'conn' in locals() and conn.is_connected():
             cursor.close()
             conn.close()
-
-# 2. Yeni Ürün Ekleme (POST İsteği)
 @app.route('/api/urunler', methods=['POST'])
 def add_urun():
     data = request.json
@@ -73,7 +68,6 @@ def add_urun():
             cursor.close()
             conn.close()
 
-# 3. Ürün Silme (DELETE İsteği)
 @app.route('/api/urunler/<int:urun_id>', methods=['DELETE'])
 def delete_urun(urun_id):
     try:
@@ -93,7 +87,6 @@ def delete_urun(urun_id):
             cursor.close()
             conn.close()
 
-# --- KATEGORİLER ROTALARI ---
 @app.route('/api/kategoriler', methods=['GET'])
 def get_kategoriler():
     try:
@@ -134,7 +127,6 @@ def delete_kategori(id):
     finally:
         if 'conn' in locals() and conn.is_connected(): cursor.close(); conn.close()
 
-# --- DEPOLAR ROTALARI ---
 @app.route('/api/depolar', methods=['GET'])
 def get_depolar():
     try:
@@ -176,7 +168,6 @@ def delete_depo(id):
     finally:
         if 'conn' in locals() and conn.is_connected(): cursor.close(); conn.close()
 
-# --- PERSONEL ROTALARI ---
 @app.route('/api/personel', methods=['GET'])
 def get_personel():
     try:
@@ -218,7 +209,6 @@ def delete_personel(id):
     finally:
         if 'conn' in locals() and conn.is_connected(): cursor.close(); conn.close()
 
-# --- TEDARİKÇİLER ROTALARI ---
 @app.route('/api/tedarikciler', methods=['GET'])
 def get_tedarikciler():
     try:
@@ -259,7 +249,6 @@ def delete_tedarikci(id):
     finally:
         if 'conn' in locals() and conn.is_connected(): cursor.close(); conn.close()
 
-# --- STOK HAREKETLERİ ROTALARI ---
 @app.route('/api/stokhareketleri', methods=['GET'])
 def get_stokhareketleri():
     try:
@@ -305,5 +294,4 @@ def delete_stokhareketi(id):
         if 'conn' in locals() and conn.is_connected(): cursor.close(); conn.close()
 
 if __name__ == '__main__':
-    # JavaScript kodunda değişiklik yapmamak için portu yine 3000 olarak ayarlıyoruz
     app.run(port=3000, debug=True)

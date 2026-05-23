@@ -62,7 +62,6 @@ button:hover {
     width: 100%;
     margin-bottom: 20px;
     box-sizing: border-box;
-    /* Padding'in genişliği bozmasını engeller */
 }
 
 table {

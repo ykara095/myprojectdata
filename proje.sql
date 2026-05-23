@@ -71,9 +71,7 @@ CREATE TABLE Stok_Hareketleri (
     FOREIGN KEY (Personel_ID) REFERENCES Personel(Personel_ID)
 );
 
--- Başlangıç Verileri (Seed Data)
 
--- 1. Kategoriler
 INSERT INTO Kategoriler (Kategori_Adi, Tanim) VALUES 
 ('Elektronik', 'Bilgisayar, telefon ve akıllı ev aletleri'),
 ('Gıda', 'Temel gıda, atıştırmalık ve içecek ürünleri'),
@@ -81,14 +79,12 @@ INSERT INTO Kategoriler (Kategori_Adi, Tanim) VALUES
 ('Mobilya', 'Ofis ve çalışma alanı mobilyaları'),
 ('Kırtasiye', 'Defter, kalem ve sarf malzemeler');
 
--- 2. Depolar
 INSERT INTO Depolar (Depo_Adi, Lokasyon_Adres, Toplam_Kapasite) VALUES 
 ('Marmara Merkez Depo', 'İstanbul / Tuzla Organize Sanayi', 10000),
 ('Ege Bölge Deposu', 'İzmir / Kemalpaşa', 5000),
 ('İç Anadolu Lojistik', 'Ankara / Kahramankazan', 7500),
 ('Akdeniz Aktarma', 'Antalya / Kepez', 3000);
 
--- 3. Tedarikçiler
 INSERT INTO Tedarikciler (Firma_Adi, Iletisim_Bilgileri) VALUES 
 ('TeknoDağıtım A.Ş.', 'iletisim@teknodagitim.com - 0212 555 11 22'),
 ('GıdaBirlik Toptan', 'bilgi@gidabirlik.com - 0232 444 55 66'),
@@ -96,7 +92,6 @@ INSERT INTO Tedarikciler (Firma_Adi, Iletisim_Bilgileri) VALUES
 ('OfisLine Mobilya', 'destek@ofisline.com - 0224 999 00 11'),
 ('KalemTraş Kırtasiye', 'iletisim@kalemtras.com - 0216 333 44 55');
 
--- 4. Personel
 INSERT INTO Personel (Ad, Soyad, Gorev, Erisim_Yetkisi, Depo_ID) VALUES 
 ('Ahmet', 'Yılmaz', 'Depo Müdürü', 'Admin', 1),
 ('Ayşe', 'Kaya', 'Stok Görevlisi', 'User', 1),
@@ -104,7 +99,6 @@ INSERT INTO Personel (Ad, Soyad, Gorev, Erisim_Yetkisi, Depo_ID) VALUES
 ('Fatma', 'Şahin', 'Stok Görevlisi', 'User', 3),
 ('Ali', 'Can', 'Depo Sorumlusu', 'Admin', 4);
 
--- 5. Ürünler
 INSERT INTO Urunler (Urun_Adi, Barkod, Birim_Fiyat, Kritik_Stok_Seviyesi, Kategori_ID) VALUES 
 ('Laptop 15.6 inç', 'TR-ELK-1001', 25000.00, 10, 1),
 ('Akıllı Telefon 128GB', 'TR-ELK-1002', 18500.00, 20, 1),
@@ -116,22 +110,19 @@ INSERT INTO Urunler (Urun_Adi, Barkod, Birim_Fiyat, Kritik_Stok_Seviyesi, Katego
 ('Çalışma Masası 120cm', 'TR-MOB-4002', 1800.00, 20, 4),
 ('A4 Fotokopi Kağıdı 500lü', 'TR-KRT-5001', 120.00, 300, 5);
 
--- 6. Tedarikçi - Ürün Eşleştirmesi (Hangi ürün hangi tedarikçiden alınır)
 INSERT INTO Tedarikci_Urun (Tedarikci_ID, Urun_ID) VALUES 
-(1, 1), (1, 2), -- TeknoDağıtım -> Elektronikler
-(2, 3), (2, 4), -- GıdaBirlik -> Gıdalar
-(3, 5), (3, 6), -- PakKimya -> Temizlik
-(4, 7), (4, 8), -- OfisLine -> Mobilya
-(5, 9);         -- KalemTraş -> Kağıt
+(1, 1), (1, 2), 
+(2, 3), (2, 4), 
+(3, 5), (3, 6), 
+(4, 7), (4, 8), 
+(5, 9);         
 
--- 7. Depo Ürün Stok (Mevcut Durum)
 INSERT INTO Depo_Urun_Stok (Depo_ID, Urun_ID, Guncel_Stok) VALUES 
-(1, 1, 45), (1, 2, 80), (1, 9, 500), -- Merkez Depo Elektronik ve Kağıt
-(2, 3, 250), (2, 4, 120),            -- İzmir Depo Gıda
-(3, 5, 800), (3, 6, 600),            -- Ankara Depo Temizlik
-(4, 7, 40), (4, 8, 35);              -- Antalya Depo Mobilya
+(1, 1, 45), (1, 2, 80), (1, 9, 500), 
+(2, 3, 250), (2, 4, 120),            
+(3, 5, 800), (3, 6, 600),            
+(4, 7, 40), (4, 8, 35);              
 
--- 8. Stok Hareketleri (Geçmiş Loglar)
 INSERT INTO Stok_Hareketleri (Islem_Tipi, Miktar, Islem_Tarihi, Urun_ID, Depo_ID, Personel_ID) VALUES 
 ('Giriş', 50, '2025-01-10 10:00:00', 1, 1, 1),
 ('Çıkış', 5, '2025-01-15 14:30:00', 1, 1, 2),
@@ -148,22 +139,18 @@ INSERT INTO Stok_Hareketleri (Islem_Tipi, Miktar, Islem_Tarihi, Urun_ID, Depo_ID
 ('Giriş', 600, '2025-05-01 10:00:00', 9, 1, 1),
 ('Çıkış', 100, '2025-05-05 16:00:00', 9, 1, 2);
 
--- --- YENİ EKLENEN VERİLER ---
 
--- Yeni Kategoriler
 INSERT INTO Kategoriler (Kategori_Adi, Tanim) VALUES 
 ('Giyim', 'Tekstil, giyim ve aksesuar ürünleri'),
 ('Otomotiv', 'Araç bakım ve yedek parça'),
 ('Spor', 'Spor aletleri ve giyim'),
 ('Kozmetik', 'Kişisel bakım ve makyaj ürünleri');
 
--- Yeni Depolar
 INSERT INTO Depolar (Depo_Adi, Lokasyon_Adres, Toplam_Kapasite) VALUES 
 ('Karadeniz Ana Depo', 'Samsun / İlkadım', 4000),
 ('Doğu Anadolu Deposu', 'Erzurum / Yakutiye', 2500),
 ('Trakya Lojistik Merkezi', 'Tekirdağ / Çorlu', 6000);
 
--- Yeni Tedarikçiler
 INSERT INTO Tedarikciler (Firma_Adi, Iletisim_Bilgileri) VALUES 
 ('ModaTekstil A.Ş.', 'satis@modatekstil.com - 0212 111 22 33'),
 ('OtoParça Dünyası', 'bilgi@otoparca.com - 0216 222 33 44'),
@@ -171,7 +158,6 @@ INSERT INTO Tedarikciler (Firma_Adi, Iletisim_Bilgileri) VALUES
 ('Güzellik Kozmetik', 'iletisim@guzellik.com - 0232 444 55 66'),
 ('Mega Dağıtım Ticaret', 'info@megadagitim.com - 0224 555 66 77');
 
--- Yeni Personel
 INSERT INTO Personel (Ad, Soyad, Gorev, Erisim_Yetkisi, Depo_ID) VALUES 
 ('Canan', 'Sarı', 'Depo Yöneticisi', 'Admin', 5),
 ('Burak', 'Koç', 'Stok Görevlisi', 'User', 5),
@@ -179,32 +165,24 @@ INSERT INTO Personel (Ad, Soyad, Gorev, Erisim_Yetkisi, Depo_ID) VALUES
 ('Zeynep', 'Çelik', 'Stok Görevlisi', 'User', 6),
 ('Onur', 'Aydın', 'Depo Şefi', 'Admin', 7);
 
--- Yeni Ürünler
--- Giyim (Kategori_ID: 6)
 INSERT INTO Urunler (Urun_Adi, Barkod, Birim_Fiyat, Kritik_Stok_Seviyesi, Kategori_ID) VALUES 
 ('Erkek Pamuklu Tişört', 'TR-GYM-6001', 250.00, 50, 6),
 ('Kadın Spor Tayt', 'TR-GYM-6002', 350.00, 40, 6),
 ('Kışlık Kaban', 'TR-GYM-6003', 1500.00, 20, 6),
--- Otomotiv (Kategori_ID: 7)
 ('Motor Yağı 4L', 'TR-OTO-7001', 850.00, 30, 7),
 ('Oto Cam Suyu 5L', 'TR-OTO-7002', 120.00, 100, 7),
 ('Silecek Takımı', 'TR-OTO-7003', 200.00, 50, 7),
--- Spor (Kategori_ID: 8)
 ('Dumbell Seti 20kg', 'TR-SPR-8001', 800.00, 15, 8),
 ('Yoga Matı', 'TR-SPR-8002', 250.00, 30, 8),
 ('Basketbol Topu', 'TR-SPR-8003', 450.00, 25, 8),
--- Kozmetik (Kategori_ID: 9)
 ('Nemlendirici Krem 50ml', 'TR-KOZ-9001', 300.00, 40, 9),
 ('Güneş Kremi 50 SPF', 'TR-KOZ-9002', 450.00, 30, 9),
 ('Parfüm 100ml', 'TR-KOZ-9003', 1200.00, 20, 9),
--- Elektronik (Kategori_ID: 1)
 ('Kablosuz Kulaklık', 'TR-ELK-1003', 1200.00, 50, 1),
 ('Akıllı Saat', 'TR-ELK-1004', 3500.00, 30, 1),
--- Gıda (Kategori_ID: 2)
 ('Siyah Çay 1KG', 'TR-GID-2003', 150.00, 200, 2),
 ('Fındık Ezmesi 320g', 'TR-GID-2004', 90.00, 100, 2);
 
--- Tedarikçi Ürün Eşleştirmesi
 INSERT INTO Tedarikci_Urun (Tedarikci_ID, Urun_ID) VALUES 
 (6, 10), (6, 11), (6, 12),
 (7, 13), (7, 14), (7, 15),
@@ -213,7 +191,6 @@ INSERT INTO Tedarikci_Urun (Tedarikci_ID, Urun_ID) VALUES
 (10, 22), (10, 23),
 (2, 24), (2, 25);
 
--- Depo Ürün Stok
 INSERT INTO Depo_Urun_Stok (Depo_ID, Urun_ID, Guncel_Stok) VALUES 
 (5, 10, 150), (5, 11, 200), (5, 12, 50),
 (6, 13, 100), (6, 14, 300), (6, 15, 80),
@@ -222,7 +199,6 @@ INSERT INTO Depo_Urun_Stok (Depo_ID, Urun_ID, Guncel_Stok) VALUES
 (1, 22, 250), (1, 23, 100),
 (2, 24, 500), (2, 25, 300);
 
--- Stok Hareketleri
 INSERT INTO Stok_Hareketleri (Islem_Tipi, Miktar, Islem_Tarihi, Urun_ID, Depo_ID, Personel_ID) VALUES 
 ('Giriş', 200, '2025-05-10 10:00:00', 10, 5, 6),
 ('Çıkış', 50, '2025-05-12 14:30:00', 10, 5, 7),
@@ -231,12 +207,10 @@ INSERT INTO Stok_Hareketleri (Islem_Tipi, Miktar, Islem_Tarihi, Urun_ID, Depo_ID
 ('Giriş', 100, '2025-05-20 11:45:00', 16, 7, 10),
 ('Çıkış', 55, '2025-05-22 16:20:00', 16, 7, 10);
 
--- Daha fazla Tedarikçi Ürün Eşleştirmesi
 INSERT INTO Tedarikci_Urun (Tedarikci_ID, Urun_ID) VALUES 
 (1, 3), (1, 5), (1, 7), (2, 2), (2, 6), (3, 1), (3, 8), (4, 4), (4, 9), (5, 10), (5, 15),
 (6, 13), (6, 20), (7, 18), (7, 24), (8, 22), (8, 25), (9, 14), (10, 11), (10, 12);
 
--- Daha fazla Depo Ürün Stok
 INSERT INTO Depo_Urun_Stok (Depo_ID, Urun_ID, Guncel_Stok) VALUES 
 (1, 3, 200), (1, 4, 150), (1, 5, 80), (1, 6, 90), (1, 7, 30), (1, 8, 40),
 (2, 1, 50), (2, 2, 70), (2, 5, 120), (2, 6, 80), (2, 9, 300), (2, 10, 45),
@@ -246,7 +220,6 @@ INSERT INTO Depo_Urun_Stok (Depo_ID, Urun_ID, Guncel_Stok) VALUES
 (6, 1, 30), (6, 2, 45), (6, 10, 110), (6, 11, 130), (6, 12, 65), (6, 16, 50),
 (7, 3, 150), (7, 4, 110), (7, 5, 250), (7, 6, 180), (7, 19, 90), (7, 20, 105);
 
--- Daha fazla Stok Hareketleri
 INSERT INTO Stok_Hareketleri (Islem_Tipi, Miktar, Islem_Tarihi, Urun_ID, Depo_ID, Personel_ID) VALUES 
 ('Giriş', 100, '2025-06-01 08:00:00', 1, 1, 1),
 ('Çıkış', 20, '2025-06-02 09:30:00', 1, 1, 2),
@@ -299,9 +272,6 @@ INSERT INTO Stok_Hareketleri (Islem_Tipi, Miktar, Islem_Tarihi, Urun_ID, Depo_ID
 ('Giriş', 200, '2025-07-19 16:40:00', 25, 4, 5),
 ('Çıkış', 40, '2025-07-20 08:50:00', 25, 4, 5);
 
--- =============================================
--- SAKLI YORDAMLAR (STORED PROCEDURES)
--- =============================================
 DELIMITER //
 
 DROP PROCEDURE IF EXISTS GetUrunler //
