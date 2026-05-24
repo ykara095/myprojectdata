@@ -27,8 +27,8 @@ CREATE TABLE Personel (
     Soyad VARCHAR(50) NOT NULL,
     Gorev VARCHAR(100),
     Erisim_Yetkisi VARCHAR(50),
-    Depo_ID INT NOT NULL,
-    FOREIGN KEY (Depo_ID) REFERENCES Depolar(Depo_ID)
+    Depo_ID INT,
+    FOREIGN KEY (Depo_ID) REFERENCES Depolar(Depo_ID) ON DELETE SET NULL
 );
 
 CREATE TABLE Urunler (
@@ -37,8 +37,8 @@ CREATE TABLE Urunler (
     Barkod VARCHAR(50) UNIQUE,
     Birim_Fiyat DECIMAL(10, 2),
     Kritik_Stok_Seviyesi INT,
-    Kategori_ID INT NOT NULL,
-    FOREIGN KEY (Kategori_ID) REFERENCES Kategoriler(Kategori_ID)
+    Kategori_ID INT,
+    FOREIGN KEY (Kategori_ID) REFERENCES Kategoriler(Kategori_ID) ON DELETE SET NULL
 );
 
 CREATE TABLE Depo_Urun_Stok (
@@ -46,16 +46,16 @@ CREATE TABLE Depo_Urun_Stok (
     Urun_ID INT,
     Guncel_Stok INT DEFAULT 0, 
     PRIMARY KEY (Depo_ID, Urun_ID),
-    FOREIGN KEY (Depo_ID) REFERENCES Depolar(Depo_ID),
-    FOREIGN KEY (Urun_ID) REFERENCES Urunler(Urun_ID)
+    FOREIGN KEY (Depo_ID) REFERENCES Depolar(Depo_ID) ON DELETE CASCADE,
+    FOREIGN KEY (Urun_ID) REFERENCES Urunler(Urun_ID) ON DELETE CASCADE
 );
 
 CREATE TABLE Tedarikci_Urun (
     Tedarikci_ID INT,
     Urun_ID INT,
     PRIMARY KEY (Tedarikci_ID, Urun_ID),
-    FOREIGN KEY (Tedarikci_ID) REFERENCES Tedarikciler(Tedarikci_ID),
-    FOREIGN KEY (Urun_ID) REFERENCES Urunler(Urun_ID)
+    FOREIGN KEY (Tedarikci_ID) REFERENCES Tedarikciler(Tedarikci_ID) ON DELETE CASCADE,
+    FOREIGN KEY (Urun_ID) REFERENCES Urunler(Urun_ID) ON DELETE CASCADE
 );
 
 CREATE TABLE Stok_Hareketleri (
@@ -63,12 +63,12 @@ CREATE TABLE Stok_Hareketleri (
     Islem_Tipi ENUM('Giriş', 'Çıkış') NOT NULL,
     Miktar INT NOT NULL CHECK (Miktar > 0),
     Islem_Tarihi DATETIME DEFAULT CURRENT_TIMESTAMP,
-    Urun_ID INT NOT NULL,
-    Depo_ID INT NOT NULL,
-    Personel_ID INT NOT NULL,
-    FOREIGN KEY (Urun_ID) REFERENCES Urunler(Urun_ID),
-    FOREIGN KEY (Depo_ID) REFERENCES Depolar(Depo_ID),
-    FOREIGN KEY (Personel_ID) REFERENCES Personel(Personel_ID)
+    Urun_ID INT,
+    Depo_ID INT,
+    Personel_ID INT,
+    FOREIGN KEY (Urun_ID) REFERENCES Urunler(Urun_ID) ON DELETE SET NULL,
+    FOREIGN KEY (Depo_ID) REFERENCES Depolar(Depo_ID) ON DELETE SET NULL,
+    FOREIGN KEY (Personel_ID) REFERENCES Personel(Personel_ID) ON DELETE SET NULL
 );
 
 

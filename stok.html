@@ -60,7 +60,11 @@
         <h1>Stok Hareketleri Takip Günlüğü</h1>
 
         <div class="form-group">
-            <input type="text" id="islemTipi" placeholder="İşlem Tipi (Giriş / Çıkış)">
+            <select id="islemTipi">
+                <option value="" disabled selected>İşlem Tipi Seçin</option>
+                <option value="Giriş">Giriş</option>
+                <option value="Çıkış">Çıkış</option>
+            </select>
             <input type="number" id="miktar" placeholder="Miktar">
             <input type="number" id="urunId" placeholder="Ürün ID">
             <input type="number" id="depoId" placeholder="Depo ID">
