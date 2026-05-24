@@ -533,25 +533,21 @@ FOR EACH ROW
 BEGIN
     DECLARE mevcut_stok INT;
 
-    -- Depoda bu üründen var mı kontrol et
     SELECT Guncel_Stok INTO mevcut_stok 
     FROM Depo_Urun_Stok 
     WHERE Depo_ID = NEW.Depo_ID AND Urun_ID = NEW.Urun_ID;
 
     IF NEW.Islem_Tipi = 'Giriş' THEN
         IF mevcut_stok IS NULL THEN
-            -- Eğer ürün bu depoda hiç yoksa yeni kayıt oluştur
             INSERT INTO Depo_Urun_Stok (Depo_ID, Urun_ID, Guncel_Stok) 
             VALUES (NEW.Depo_ID, NEW.Urun_ID, NEW.Miktar);
         ELSE
-            -- Varsa stoğu artır
             UPDATE Depo_Urun_Stok 
             SET Guncel_Stok = Guncel_Stok + NEW.Miktar 
             WHERE Depo_ID = NEW.Depo_ID AND Urun_ID = NEW.Urun_ID;
         END IF;
     ELSEIF NEW.Islem_Tipi = 'Çıkış' THEN
         IF mevcut_stok IS NOT NULL AND mevcut_stok >= NEW.Miktar THEN
-            -- Eğer ürün varsa ve stok yeterliyse stoğu düş
             UPDATE Depo_Urun_Stok 
             SET Guncel_Stok = Guncel_Stok - NEW.Miktar 
             WHERE Depo_ID = NEW.Depo_ID AND Urun_ID = NEW.Urun_ID;
